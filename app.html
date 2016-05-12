@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8">
+    <script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <style type="text/css">
+    * {
+        margin: 0;
+        padding: 0;
+    }
+    
+    .time {
+        width: 100px;
+        height: 30px;
+        margin: 0 auto;
+        margin-top: 50px;
+    }
+    
+    .time span {
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+        border: 1px solid #000;
+        box-sizing: border-box;
+        text-align: center;
+        line-height: 30px;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="time">
+        <span class="h"></span>
+        <span class="m"></span>
+        <span class="s"></span>
+    </div>
+    <div class="time">
+        <span class="h"></span>
+        <span class="m"></span>
+        <span class="s"></span>
+    </div>
+</body>
+<script type="text/javascript">
+(function(win, doc, $, undefined) {
+    // config 数组,保存多个倒计时的结束时间
+    // callback 回调函数， 当倒计时结束时执行此函数
+    $.fn.countdown = function(config, callback) {
+        this.each(function(index, item) {
+            item.timer = setInterval(function() {
+                var nowtime = new Date(); // 起始时间一定要写在这里面
+                var endtime = config[index].endTime;
+
+                var leftsecond = parseInt((endtime.getTime() - nowtime.getTime()) / 1000);
+
+                d = parseInt(leftsecond / 3600 / 24);
+                h = parseInt((leftsecond / 3600));
+                m = parseInt((leftsecond / 60) % 60);
+                s = parseInt(leftsecond % 60);
+                if (h < 10) {
+                    h = '0' + h;
+                }
+                if (m < 10) {
+                    m = '0' + m;
+                }
+                if (s < 10) {
+                    s = '0' + s;
+                }
+                if (leftsecond <= 0) {
+                    win.clearInterval(item.timer); // 清楚定时器
+                    callback && callback(); // 只有当回调函数存在时才执行
+                }
+                $(item).children().eq(0).text(h);
+                $(item).children().eq(1).text(m);
+                $(item).children().eq(2).text(s);
+            }, 1000);
+        });
+
+    };
+})(window, document, jQuery);
+
+
+// 传递参数方式使用数组，只有一个倒计时时也需要以数组的方式进行传递，还可以优化，暂时这样就可以了
+
+
+$('.time').countdown([{
+    endTime: new Date("2016/5/12,20:07:20")
+}, {
+    endTime: new Date("2016/5/12,20:07:26")
+}], function() {
+    console.log('时间结束了，该干我自己的事情了');
+});
+</script>
+
+</html>
